@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello, world!</h1>
+        <button id="getProducts" onclick="txtData1()">getProducts</button>
+        <div id="loadProducts"></div>
+        <input type="file">
+        <textarea cols="30" rows="20" placeholder="text will appear here"> 
+        </textarea>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        let input = document.querySelector('input')
+        let textarea = document.querySelector('textarea')
+
+        input.addEventListener('change', () => {
+            let files = input.files;
+
+            if (files.length == 0) return;
+
+            const file = files[0];
+
+            let reader = new FileReader();
+
+            reader.onload = (e) => {
+                const file = e.target.result;
+                //const lines = file.split(/\r\n|\n/);
+                const lines = file.split("~");
+                textarea.value = lines.join('\n');
+                console.table(lines.join('\n'))
+
+            };
+
+            reader.onerror = (e) => alert(e.target.error.name);
+            reader.readAsText(file);
+        });
+
+        let txtData = () => {
+            let url = '/products.txt'
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    //let responseJsonObj = JSON.parse(this.responseText);
+                    console.log(this.responseText)
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+        }
+
+        let txtData1 = () => {
+            let myMap = new Object()
+
+            let url = 'http://localhost:5500/products.txt'
+            fetch(url)
+                .then(response => response.text())
+                .then((data) => {
+                    //let data_refine = data.split('~')
+                    let data_header = data.split('\n')[0].split('~');
+                    let data_body = data.split('\n').slice(1, 2)
+                        //console.log(data_body)
+
+                    data_body.forEach((value, index, array) => {
+                        let body_line = value.split('~')
+                        body_line.forEach((value, index, array) => {
+                            myMap[data_header[index]] = value
+                        })
+                    })
+                    console.log(myMap)
+                        /*
+                        let data_body = () => {
+                            let mydata = data.split('~')
+                            console.log(mydata[0])
+                                //return a + b + chuck;
+                        }
+                        data_body()
+
+                        //arr = arr.filter(item => ![].includes(item))
+
+                        console.log(arr)
+                            
+                            data_body.shift()
+
+                            let finalData = data_body.slice(0, 5)
+
+
+
+                            function checkAdult(age) {
+                                return age >= 18;
+                            }
+
+                            let my_arry = []
+
+                            data_header.forEach((value, index, array) => {
+                                finalData.forEach((value, index, array) => {
+
+                                })
+                            })
+
+                            //let data_split = data.split('~');
+                            //data_body.slice(14)
+
+                    
+                             finalData.forEach((value, index, array) => {
+                                 let split_val = value.split('~')
+                                 let local_arry = []
+                                 split_val.forEach((value, index, array) => {
+                                     local_arry.push(value)
+                                 })
+
+                                 //my_arry.push(local_arry)
+                             });
+                             //console.log(my_arry)
+
+                             
+                             function myFunction(value, index, array) {
+                                 let split_val = value.split('~')
+                                     //txt = txt + value + "<br>";
+                                     //myMap.set(data_header[0], value)
+                                 console.log(index)
+                             }
+                             console.log(myMap)
+                                 
+                                  for (let [key, value] of data_refine.entries()) {
+                                      console.log(key + ' = ' + value)
+                                  }
+                                  //console.log(data_refine)
+
+
+
+                                    /*
+                    data_body.forEach((value, index, array) => {
+                        let body_line = value.split('~')
+                        body_line.forEach((value, index, array) => {
+                            let column = data_header[index] = value
+                                /*
+                                Object.keys(myMap).map(function(key, index) {
+                                    myMap[data_header[index]] *= 2;
+                                });
+                              
+                            let myObj = {}
+                            myObj[data_header[index]] = value
+                            myMap.push(myObj)
+                        })
+                    })
+                    */
+                })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Starter Template · Bootstrap</title>
+    <!-- Favicons -->
+    <meta name="theme-color" content="#563d7c">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- datatables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        
+        body {
+            padding-top: 5rem;
+        }
+        
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+        /*
+        #products-table td,
+        #products-table th {
+            border: 1px solid gray !important;
+        }
+        */
+        #tableId {
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-info fixed-top">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <main role="main">
+            <div class="container" style="margin-left: 30px;">
+                <button type="button" class="btn btn-info" id="myBtn">Info</button><br><br>
+                <table id="myTable" class="table table-bordered">
+                    <thead class="table-primary"></thead><tbody></tbody>
+                </table>
+            </div>
+    </main>
+
+
+    <!-- /.container -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+        const btnGet = document.querySelector('#myBtn');
+        const myTable = document.querySelector('#myTable');
+        const url = 'http://localhost:5500/products.txt';
+        let json_array = [];
+
+        //https://stackoverflow.com/questions/51435592/how-to-create-jquery-data-table-from-json-array-without-declaring-columns/51435813
+        //https://www.ihbc.org.uk/consultationsdb_new/examples/ajax/custom_data_flat.html
+
+        btnGet.addEventListener('click', () => {
+            fetch(url)
+            .then(response => response.text())
+            .then((data) => {
+                let data_header = data.split('\n')[0].split('~');
+                //console.log(data_header)
+                //let data_body = data.split('\n').slice(1)
+                let data_body = data.split('\n').slice(1,10)
+
+                data_body.map((value, index, array) => {
+                    let body_line = value.split('~')
+                    let eachObj = {}
+                    body_line.map((value, index, array) => {
+                        eachObj[data_header[index]] = value
+                    })
+                    json_array.push(eachObj)
+                })  
+                setTimeout(()=>buildTable(json_array), 500);
+            })
+        });
+
+        let rowCreator = (item) => {
+            item.map((x) => console.log(x));
+        };
+
+        let buildTable3 = (data) => {
+            //var table = document.getElementById('myTable')
+            
+            for (let i = 0; i < data.length; i++){
+                let row  =  `<tr>
+                                <td>${data[i].Appl_No}</td>
+					        </tr>`
+                //table.innerHTML += row
+                //console.log(row)
+            }
+
+            let test = data.map((item, index) => `<tr>
+                <td>${item.Appl_No}</td></tr>`);
+            console.log(test)
+	    }
+
+        let buildTable3 = (data) => {
+            data.map(item => `<tbody>${buildTable2(item)}</tbody>`)
+        }
+
+        let buildTable1 = (data) => {
+            //console.log(data[0].Product_No)
+            const thead = $(myTable).find('thead');
+            const tr = $("<tr>");
+            thead.append(tr);
+            let mytest = {}
+            let columns =  Object.keys(data[0]).map((item)=> {return { data: item, title: item }})
+           
+            $(myTable).DataTable({
+                data: data,
+                //columns: columns
+                /*
+                columns: Object.keys(data[0]).map((item)=> {
+                    return { data: item, title: item }
+                }),
+                Object.keys(data[0]).map((item)=> {return { data: item, title: item }}) },
+                */
+                columns: [
+                    //{'data':"Appl_No","title":"Appl_No"},
+                    //{"title":"Appl_No","data":"Appl_No"},
+                    {title:"Ingredient",data:"Ingredient"},
+                    {title:"DF;Route",data:"DF;Route"},
+                    {title:"Trade_Name",data:"Trade_Name"},
+                    {title:"Applicant",data:"Applicant"},
+                    {title:"Strength",data:"Strength"},
+                    {title:"Appl_Type",data:"Appl_Type"},
+                    {title:"Appl_No",data:"Appl_No"},
+                    {title:"Product_No",data:"Product_No"},
+                    {title:"TE_Code",data:"TE_Code"},
+                    {title:"Approval_Date",data:"Approval_Date"},
+                    {title:"RLD",data:"RLD"},
+                    {title:"RS",data:"RS"},
+                    {title:"Type",data:"Type"},
+                    {title:"Applicant_Full_Name",data:"Applicant_Full_Name"},
+                    {"title":"weblink","data":"Appl_No",
+                        "render": (data, type, row, meta)=>{
+                            console.log('render',data)
+                            if(type === 'display'){
+                                data = '<a href="' + data + '">' + data + '</a>';
+                            }
+                            return data;
+                        }
+                    } 
+                ]
+            });   
+        }
+
+        myTable.addEventListener( 'click', (event)=> {
+            let target = event.target;
+            
+            if (target.nodeName != 'TD') return;
+            
+            let columns = target.parentNode.getElementsByTagName('td');
+            //https://www.accessdata.fda.gov/scripts/cder/ob/patent_info.cfm?Product_No=001&Appl_No=021995&Appl_type=N
+           //console.log('Product_No :',columns[7].textContent)
+            //console.log('Appl_No :',columns[6].textContent)
+            //console.log('Appl_type :', columns[5].textContent)
+
+            //Product_No=001&Appl_No=021995&Appl_type=N
+
+            
+        });
+
+        /*
+          let buildTable = (data) => {
+            //let test = `${data.map(rowCreator).join("")}`
+            let test = `<tr>
+                            ${data.map(item => {
+                                let row = Object.values(item)
+                                return `${row.map(td => `<td>${td}</td>`).join("")}`
+                            }).join("")}
+                        </tr>`;
+                        
+            console.log(test)
+        }
+
+        
+        let doublePrices = Object.fromEntries(
+            Object.entries(prices).map(([key, value]) => [key, value * 2])
+        );
+      
+            //return `<td>${item.map(td => td).join("")}</td>`
+         //let row = Object.values(item)
+            //return `${item.map(td => `<td>${td}</td>`).join("")}`
+            */
+    </script>
+</body>
+
+</html>
