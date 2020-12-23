@@ -1,0 +1,228 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Jumbotron Template for Bootstrap</title>
+
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  </head>
+
+  <style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+    
+    body {
+        padding-top: 5rem;
+    }
+    
+    .starter-template {
+        padding: 3rem 1.5rem;
+        text-align: center;
+    }
+    
+    table.gridtable {
+        font-family: verdana, arial, sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+    
+    table.gridtable th {
+        border-width: 1px;
+        padding: 6px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #dedede;
+    }
+    
+    table.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
+</style>
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main role="main">
+        <div class="container" style="margin-top:5%;margin-left: 40px;">
+            <p class="text-info">Patent Information</p>
+            <table id="patent" class="gridtable" style="width:100%"></table>
+            <br>
+            <p class="text-info">Exclusivity Information</p>
+            <table id="exclusivity" class="gridtable" style="width:100%"></table>
+        </div>
+    </main>
+
+    <!-- /.container -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        let buildData = (url, tbl) => {
+            let json_data = [];
+            fetch(url)
+                .then(response => response.text())
+                .then((data) => {
+                    let data_header = data.split('\n')[0].split('~');
+                    let data_body = data.split('\n').slice(1)
+
+                    data_body.map((value, index, array) => {
+                        let body_line = value.split('~')
+                        let eachObj = {}
+                        body_line.map((value, index, array) => {
+                            eachObj[data_header[index]] = value
+                        })
+                        json_data.push(eachObj)
+                    })
+
+                    let params = new URLSearchParams(window.location.search);
+
+                    let Product_No = params.get("Product_No")
+                    let Appl_No = params.get("Appl_No")
+                    let Appl_type = params.get("Appl_type")
+
+                    //console.log(Product_No, Appl_No, Appl_type)
+
+                    //let filtered_data = json_data.filter(a => a.PATENT_NO == "210928" && a.PRODUCT_NO == "001");
+                    let filtered_data1 = json_data.filter(a => a.PRODUCT_NO === "001" && a.APPL_NO === "021995");
+
+                    let filtered_data = json_data.filter(a => {
+                        a.PRODUCT_NO == Product_No && a.APPL_NO == Appl_No && a.APPL_TYPE == Appl_type
+                    });
+                    console.log()
+                        /*
+                        if (filtered_data.length > 0) {
+                            setTimeout(() => buildTable(filtered_data, tbl), 500);
+                            setTimeout(() => $(tbl).DataTable(), 500);
+                        }
+                        */
+                    setTimeout(() => buildTable(filtered_data, tbl), 500);
+                    //setTimeout(() => $(tbl).DataTable(), 500);
+                })
+        };
+
+        let rowCreator = (item) => {
+                let row = Object.values(item)
+                return `<tr>${row.map(td => `<td>${td}</td>`).join("")}</tr>`;
+        }
+        
+        let buildTable = (data, tbl) => {
+            let thead = tbl.createTHead();
+            let tbody = tbl.createTBody();
+
+            //let tbl1 = document.createElement("TABLE");
+            //let thead1 = document.createElement("THEAD");
+            //let tbody1 = document.createElement("TBODY");
+
+            thead.classList.add("table-primary");
+        
+            thead.innerHTML = Object.keys(data[0]).map(item => {
+                return `<th>${item}</th>`
+            }).join("")
+        
+            tbody.innerHTML = data.map(rowCreator).join("")
+        }
+
+        let getUrlParms = () => {
+            //method-1
+            //let params = new URLSearchParams("?mode=night&page=2");
+            //let url = new URL(window.location.href);
+            //console.log(url.searchParams.get('Appl_No'))
+
+            //method-2
+            //let params = new URLSearchParams(document.location.search.substring(1));
+            //console.log(params.get("Product_No"))
+
+            //Get Query String Parameters with JavaScript
+            //https://davidwalsh.name/query-string-javascript
+            //https://www.geeksforgeeks.org/how-to-get-url-parameters-using-javascript/
+
+            var urlParams = new URLSearchParams(window.location.search);
+            //console.log('Appl_No :',urlParams.get('Appl_No'));
+            var keys = urlParams.keys();
+            for(key of keys) { 
+                console.log(key); 
+            }
+
+            var entries = urlParams.entries();
+            for(pair of entries) { 
+                console.log(pair[0], pair[1]); 
+            }
+        }
+
+        window.onload = function () {
+            //patent parms///
+            const patent_url = 'http://localhost:5500/orange/patent.txt';
+            const patent_tbl = document.querySelector('#patent');
+            let patent_func = setTimeout(buildData(patent_url, patent_tbl), 200);
+            
+            //exclusivity parms///
+            /*
+            const excl_url = 'http://localhost:5500/orange/exclusivity.txt';
+            const excl_tbl = document.querySelector('#exclusivity');
+            let excl_func = setTimeout(buildData(excl_url, excl_tbl), 200);
+            */
+        };
+
+        //https://jsfiddle.net/mplungjan/r5v7q1js/
+    </script>
+</body>
+
+</html>

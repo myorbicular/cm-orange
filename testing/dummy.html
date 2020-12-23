@@ -44,7 +44,7 @@
         #products-table th {
             border: 1px solid gray !important;
         }
-        
+        */
         
         .table1 {
             font-size: 12px;
@@ -53,32 +53,6 @@
         .table td,
         .table th {
             font-size: 12px;
-        }
-        */
-        
-        table.gridtable {
-            font-family: verdana, arial, sans-serif;
-            font-size: 11px;
-            color: #333333;
-            border-width: 1px;
-            border-color: #666666;
-            border-collapse: collapse;
-        }
-        
-        table.gridtable th {
-            border-width: 1px;
-            padding: 8px;
-            border-style: solid;
-            border-color: #666666;
-            background-color: #dedede;
-        }
-        
-        table.gridtable td {
-            border-width: 1px;
-            padding: 8px;
-            border-style: solid;
-            border-color: #666666;
-            background-color: #ffffff;
         }
     </style>
 </head>
@@ -117,28 +91,13 @@
         </div>
     </nav>
 
-    <!--
-         <main role="main">
-        <div class="container" style="margin-left: 30px;">
-            <div class="row header">
-                <h5 class="text-success">Bootstrap table with pagination
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="myBtn">Get Products</button>
-                </h5>
-                <table id="myTable" class="table table-striped table-bordered" style="width:100%">
-                </table>
-            </div>
-            </div>
-        </main>
-    -->
-
     <main role="main">
-        <div class="container" style="margin-left: 40px;">
-            <div class="row header">
-                <h5 class="text-success">Bootstrap table with pagination
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="myBtn">Get Products</button>
-                </h5>
-                <table id="myTable" class="gridtable" style="width:80%"></table>
-            </div>
+        <div class="container" style="margin-left: 30px;">
+            <p class="text-info">Patent Information</p>
+            <table id="patent" class="table table-striped table-bordered" style="width:100%"></table>
+            <br>
+            <p class="text-info">Exclusivity Information</p>
+            <table id="exclusivity" class="table table-striped table-bordered" style="width:100%"></table>
         </div>
     </main>
 
@@ -148,24 +107,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
-        const btnGet = document.querySelector('#myBtn');
-        const myTable = document.querySelector('#myTable');
-        const url = 'http://localhost:5500/orange/products.txt';
-        let json_array = [];
-
-        //https://bbbootstrap.com/snippets/table-pagination-and-search-54887843
-
-        //https://stackoverflow.com/questions/51435592/how-to-create-jquery-data-table-from-json-array-without-declaring-columns/51435813
-        //https://www.ihbc.org.uk/consultationsdb_new/examples/ajax/custom_data_flat.html
-
-        btnGet.addEventListener('click', () => {
+        let buildData = (url, tbl) => {
+            let json_array = [];
             fetch(url)
                 .then(response => response.text())
                 .then((data) => {
                     let data_header = data.split('\n')[0].split('~');
-                    //console.log(data_header)
-                    let data_body = data.split('\n').slice(1)
-                        //let data_body = data.split('\n').slice(1, 50)
+                    let data_body = data.split('\n').slice(1, 10)
 
                     data_body.map((value, index, array) => {
                         let body_line = value.split('~')
@@ -175,51 +123,54 @@
                         })
                         json_array.push(eachObj)
                     })
-                    setTimeout(() => buildTable(json_array), 1000);
-                    setTimeout(() => $(myTable).DataTable(), 1000);
+                    setTimeout(() => buildTable(json_array, tbl), 500);
+                    setTimeout(() => $(tbl).DataTable(), 500);
                 })
-        });
+        };
 
-        let buildTable = (data) => {
-            let thead = myTable.createTHead();
-            let tbody = myTable.createTBody();
+        let rowCreator = (item) => {
+                let row = Object.values(item)
+                return `<tr>${row.map(td => `<td>${td}</td>`).join("")}</tr>`;
+        }
+        
+        let buildTable = (data, tbl) => {
+            let thead = tbl.createTHead();
+            let tbody = tbl.createTBody();
             thead.classList.add("table-primary");
-
+        
             thead.innerHTML = Object.keys(data[0]).map(item => {
                 return `<th>${item}</th>`
             }).join("")
-
-            $("#myTable>thead>tr").append("<th>Link</th>");
-
-            tbody.innerHTML = data.map(row => `<tr>
-                                            <td>${row['Ingredient']}</td><td>${row['DF;Route']}</td>
-                                            <td>${row['Trade_Name']}</td><td>${row['Applicant']}</td>
-                                            <td>${row['Strength']}</td><td>${row['Appl_Type']}</td>
-                                            <td>${row['Appl_No']}</td><td>${row['Product_No']}</td>
-                                            <td>${row['TE_Code']}</td><td>${row['Approval_Date']}</td>
-                                            <td>${row['RLD']}</td><td>${row['RS']}</td><td>${row['Type']}</td>
-                                            <td>${row['Applicant_Full_Name']}</td>
-                                            <td><a class="btn btn-success btn-sm text-white" target="_blank"
-                                                href="${urlParms(row)}">Get</a>
-                                            </td>
-                                        </tr>`).join("");
-            /*
-            <td><a class="btn btn-success btn-sm text-white" target="_blank"
-                href="/wellcome.html?Product_No=${row['Product_No']}&Appl_No=${row['Product_No']}&Appl_type=${row['Appl_Type']}">Get</a>
-            </td>
-            */
+        
+            tbody.innerHTML = data.map(rowCreator).join("")
         }
 
-        let urlParms = (parms) => {
-            //return `/wellcome.html?Product_No=${parms['Product_No']}&Appl_No=${parms['Product_No']}&Appl_type=${parms['Appl_Type']}`
-            let url = new URL('http://localhost:5500/product_details.html');
-            //let params = new URLSearchParams(url.search);
-            //url.searchParams.append('param_1', 'val_1');
-            url.searchParams.set('Product_No', parms['Product_No']);
-            url.searchParams.set('Appl_No', parms['Appl_No']);
-            url.searchParams.set('Appl_type', parms['Appl_Type']);
-            return url;
+        let getUrlParms = () => {
+            let url = window.location.href
+            let params = new URLSearchParams(url.search);
+            console.log(params.toString())
         }
+
+        let patent = ()=> {
+            const url = 'http://localhost:5500/orange/patent.txt';
+            const tbl = document.querySelector('#patent');
+            buildData(url, tbl)
+        }
+
+        let exclusivity = ()=> {
+            const url = 'http://localhost:5500/orange/exclusivity.txt';
+            const tbl = document.querySelector('#exclusivity');
+            buildData(url, tbl)
+        }
+    
+
+        window.onload = function () {
+            getquestions('/quizapp/question_list/');
+            setTimeout(function () {
+                patent();
+                exclusivity();
+            }, 200);
+        };
     </script>
 </body>
 

@@ -83,12 +83,12 @@
     </nav>
 
     <main role="main">
-            <div class="container">
-                <button type="button" class="btn btn-info" id="myBtn">Info</button><br><br>
-                <div id="myTable"></div>
-                <table cellspacing="0" class="dataTable table table-striped" id="reportTable"></table>
-                <table id="tableId" class="table table-condensed responsive"></table>
-            </div>
+        <div class="container">
+            <button type="button" class="btn btn-info" id="myBtn">Info</button><br><br>
+            <div id="myTable"></div>
+            <table cellspacing="0" class="dataTable table table-striped" id="reportTable"></table>
+            <table id="tableId" class="table table-condensed responsive"></table>
+        </div>
     </main>
 
 
@@ -105,24 +105,24 @@
 
         btnGet.addEventListener('click', () => {
             fetch(url)
-            .then(response => response.text())
-            .then((data) => {
-                let data_header = data.split('\n')[0].split('~');
-                //let data_body = data.split('\n').slice(1, 2)
-                let data_body = data.split('\n').slice(1,10)
+                .then(response => response.text())
+                .then((data) => {
+                    let data_header = data.split('\n')[0].split('~');
+                    //let data_body = data.split('\n').slice(1, 2)
+                    let data_body = data.split('\n').slice(1, 10)
 
-                data_body.forEach((value, index, array) => {
-                    let body_line = value.split('~')
-                    let myObj = {}
-                    body_line.forEach((value, index, array) => {
-                        let column = data_header[index];
-                        myObj[column] = value
-                    })
-                    myMap.push(myObj)              
+                    data_body.forEach((value, index, array) => {
+                            let body_line = value.split('~')
+                            let myObj = {}
+                            body_line.forEach((value, index, array) => {
+                                let column = data_header[index];
+                                myObj[column] = value
+                            })
+                            myMap.push(myObj)
+                        })
+                        //buildTable(data_header, myMap)
+                    setTimeout(() => arryTable1(myMap), 500);
                 })
-                //buildTable(data_header, myMap)
-                setTimeout(()=>arryTable1(myMap), 500);
-            })
         });
 
         let buildTable = (headers, employees) => {
@@ -163,31 +163,33 @@
                 "FarmLocation": "WH5",
                 "LocationIn": "LINE_1C2AA",
                 "Quantity": 18
-                }, {
+            }, {
                 "Number": "95844",
                 "Description": "CEMINSEAL WALLBOARD RE 6MM 1350X3000",
                 "FarmLocation": "WH5",
                 "LocationIn": "LINE_1C2AB",
                 "Quantity": 6
             }];
-            
-           let columnDefs = [];
-           
-           for(let k in dataSet[0]){
-               if(columnDefs.indexOf(k) === -1){
-                   columnDefs.push({title: dataSet[0][k]});
+
+            let columnDefs = [];
+
+            for (let k in dataSet[0]) {
+                if (columnDefs.indexOf(k) === -1) {
+                    columnDefs.push({
+                        title: dataSet[0][k]
+                    });
                 }
             }
-            
+
             let data = [];
-            for(let j of dataSet){
+            for (let j of dataSet) {
                 let arr = [];
-                for(let k in j){
-                    if(columnDefs.indexOf(k) === -1){
+                for (let k in j) {
+                    if (columnDefs.indexOf(k) === -1) {
                         arr.push(j[k]);
                     }
                 }
-                data.push(arr);  
+                data.push(arr);
             }
             let myTable1;
 
@@ -205,7 +207,7 @@
             let tr = $("<tr>");
             thead.append(tr);
             let columns = [];
-            
+
             /*
             $.each(data[0], (name, value)=> {
                 let column = {
@@ -215,11 +217,11 @@
                 columns.push(column);
             });
             */
-            
+
             Object.entries(data[0]).forEach(([key, value]) => {
                 let column = {
                     "data": key,
-                    "title":key
+                    "title": key
                 };
                 columns.push(column);
             });
@@ -228,12 +230,43 @@
                 data: data,
                 //columns: columns
                 columns: Object.keys(data[0]).map(function(item) {
-                    return { data: item, title: item }
+                    return {
+                        data: item,
+                        title: item
+                    }
                 })
-            });   
+            });
         }
 
+        /*
+        let rowCreator = (item) => {
+    let row = Object.values(item)
+    return `<tr>${row.map(td => `<td>${td}</td>`).join("")}</tr>`;
+}
 
+let buildTable1 = (data) => {         
+let thead = myTable.createTHead();
+let tbody = myTable.createTBody();
+thead.classList.add("table-primary");
+//document.createElement("TBODY");
+
+let tbl_th = Object.keys(data[0]).map(item => {
+    return `<th>${item}</th>`
+}).join("")
+
+//thead.innerHTML = `${tbl_th}<th>ramesh</th>`
+
+//$('thead tr').append($('<th/>', {text : 'Link'}))
+//$('tbody tr').append($('<td/>', {text : 'Link'}))
+
+//$("#myTable>thead>tr").append("<th>Second</th>");
+//$('#myTable tr:last').after('<tr>...</tr><tr>...</tr>');
+
+let tbl_td = data.map(rowCreator).join("")
+tbody.innerHTML = `${tbl_td}`;
+
+}
+*/
     </script>
 </body>
 
