@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Jumbotron Template for Bootstrap</title>
+    <title>Search Products</title>
 
      <!-- Bootstrap CSS -->
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -32,6 +32,8 @@
     
     body {
         padding-top: 5rem;
+        font-family: verdana, arial, sans-serif;
+        font-size: 12px;
     }
     
     .starter-template {
@@ -40,7 +42,6 @@
     }
     
     table.gridtable {
-        font-family: verdana, arial, sans-serif;
         font-size: 11px;
         color: #333333;
         border-width: 1px;
@@ -53,7 +54,8 @@
         padding: 6px;
         border-style: solid;
         border-color: #666666;
-        background-color: #dedede;
+        background-color: #0c499c;
+        color: #fff;
     }
     
     table.gridtable td {
@@ -63,11 +65,38 @@
         border-color: #666666;
         background-color: #ffffff;
     }
+    
+    .navbar-custom  {
+      background-color: #0c499c;
+      color: #fff;
+      border-color:#fff;
+    }
+
+    .btn-outline-white {
+      color: #fff;
+      background-color: transparent;
+      background-image: none;
+      border-color: #fff;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      border-radius: 2px;
+      background: #0c499c;
+      color: #fff !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      border-radius: 2px;
+      background: #00aeef;
+      color: #fff !important;
+    }
+  
 </style>
+
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-custom">
+      <a class="navbar-brand" href="#">Orange Book</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -93,8 +122,8 @@
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="nav-btn">
+          <button class="btn btn-outline-white my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
     </nav>
@@ -102,15 +131,15 @@
     <main role="main">
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="container" style="margin-top:5%;margin-left: 40px;">
+      <div class="container" style="margin-top:1%;margin-left: 40px;">
         <div class="row header">
 
-            <form>
-                <div class="form-group">
-                  <label for="txt-search">Search Product</label>
-                  <input type="text" class="form-control" id="txt-search" placeholder="Type your search character">
-                </div>
-            </form>
+          <form class="form-inline pb-2">
+            <div class="form-group">
+              <label for="txt-search" class="font-weight-bold pr-2">Search Product:</label>
+              <input type="text" class="form-control" id="txt-search" placeholder="Type your search character">
+            </div>
+          </form>
         
             <table id="myTable" class="gridtable" style="width:100%;">
                 <thead class="table-primary">
@@ -139,27 +168,33 @@
     </main>
 
     <footer class="container">
-      <p>&copy; Orbicular 2020-2021</p>
+     <!-- <p>&copy; Orbicular 2020-2021</p> -->
     </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
     <script type="text/javascript">
       
       const url = 'http://localhost:5500/orange/products.txt';
+      const local_file = './orange/products.txt'
       const searchBox = document.querySelector('#txt-search');
+      //const searchBox = document.querySelector('#nav-btn');
+
       const myTable = document.querySelector('#myTable');
       const tblBody = document.querySelector('#tbl-body');
       let json_array = [];
-      
+  
+
       let loadData = () => {
-          fetch(url)
+          fetch(local_file)
           .then(response => response.text())
           .then((data) => {
               let data_header = data.split('\n')[0].split('~');
@@ -189,7 +224,7 @@
                 let regex = new RegExp(searchField, "i");
                 
                 tblBody.innerHTML = json_array.map(row => {
-                    if ((row.Ingredient.search(regex) != -1)) {
+                    if ((row.Ingredient.search(regex) != -1) || (row.Appl_No.search(regex) != -1)) {
                         return `<tr>
                                     <td>${row['Ingredient']}</td><td>${row['DF;Route']}</td>
                                     <td>${row['Trade_Name']}</td><td>${row['Applicant']}</td>
@@ -198,7 +233,7 @@
                                     <td>${row['TE_Code']}</td><td>${row['Approval_Date']}</td>
                                     <td>${row['RLD']}</td><td>${row['RS']}</td><td>${row['Type']}</td>
                                     <td>${row['Applicant_Full_Name']}</td>
-                                    <td><a class="btn btn-success btn-sm text-white" target="_blank"
+                                    <td class="text-center"><a class="btn btn-success btn-sm text-white" target="_blank"
                                         href="${urlParms(row)}">Get</a>
                                     </td>
                                 </tr>`
@@ -206,11 +241,12 @@
                 }).join("");
                 //setTimeout(() => $(myTable).DataTable(), 1000);
                 $(myTable).DataTable()
+                //$.fn.dataTable.ext.classes.sPageButton = 'dataTbl-style';
             }
         }
         
         let urlParms = (parms) => {
-            let url = new URL('http://localhost:5500/product_details.html');
+            let url = new URL('http://localhost:8000/product_details.html');
             url.searchParams.set('Product_No', parms['Product_No']);
             url.searchParams.set('Appl_No', parms['Appl_No']);
             url.searchParams.set('Appl_type', parms['Appl_Type']);

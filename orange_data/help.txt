@@ -1,0 +1,10 @@
+https://www.python.org/downloads/
+
+local servers
+python -m http.server
+python3 -m http.server --cgi 8080
+
+
+192.168.1.10
+
+Applicant_Full_Name

@@ -1,0 +1,5 @@
+https://www.python.org/downloads/
+
+local servers
+python -m http.server
+python3 -m http.server --cgi 8080

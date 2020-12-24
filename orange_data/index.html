@@ -1,0 +1,268 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Search Products</title>
+
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  </head>
+
+  <style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+    
+    body {
+        padding-top: 5rem;
+        font-family: verdana, arial, sans-serif;
+        font-size: 12px;
+    }
+    
+    .starter-template {
+        padding: 3rem 1.5rem;
+        text-align: center;
+    }
+    
+    table.gridtable {
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+    
+    table.gridtable th {
+        border-width: 1px;
+        padding: 6px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #0c499c;
+        color: #fff;
+    }
+    
+    table.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
+    
+    .navbar-custom  {
+      background-color: #0c499c;
+      color: #fff;
+      border-color:#fff;
+    }
+
+    .btn-outline-white {
+      color: #fff;
+      background-color: transparent;
+      background-image: none;
+      border-color: #fff;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      border-radius: 2px;
+      background: #0c499c;
+      color: #fff !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      border-radius: 2px;
+      background: #00aeef;
+      color: #fff !important;
+    }
+  
+</style>
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-custom">
+      <a class="navbar-brand" href="#">Orange Book</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="nav-btn">
+          <button class="btn btn-outline-white my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="container" style="margin-top:1%;margin-left: 40px;">
+        <div class="row header">
+
+          <form class="form-inline pb-2">
+            <div class="form-group">
+              <label for="txt-search" class="font-weight-bold pr-2">Search Product:</label>
+              <input type="text" class="form-control" id="txt-search" placeholder="Type your search character">
+            </div>
+          </form>
+        
+            <table id="myTable" class="gridtable" style="width:100%;">
+                <thead class="table-primary">
+                    <th>Ingredient</th>
+                    <th>DF;Route</th>
+                    <th>Trade_Name</th>
+                    <th>Applicant</th>
+                    <th>Strength</th>
+                    <th>Appl_Type</th>
+                    <th>Appl_No</th>
+                    <th>Product_No</th>
+                    <th>TE_Code</th>
+                    <th>Approval_Date</th>
+                    <th>RLD</th>
+                    <th>RS</th>
+                    <th>Type</th>
+                    <th>Applicant_Full_Name</th>
+                    <th>Details</th>
+                </thead>
+                <tbody id="tbl-body"></tbody>
+            </table>
+            <hr>
+        </div>
+    </div>
+
+    </main>
+
+    <footer class="container">
+     <!-- <p>&copy; Orbicular 2020-2021</p> -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript">
+      
+      const url = 'http://localhost:5500/orange/products.txt';
+      const local_file = './data/products.txt'
+      const searchBox = document.querySelector('#txt-search');
+      //const searchBox = document.querySelector('#nav-btn');
+
+      const myTable = document.querySelector('#myTable');
+      const tblBody = document.querySelector('#tbl-body');
+      let json_array = [];
+
+      let loadData = () => {
+          fetch(local_file)
+          .then(response => response.text())
+          .then((data) => {
+              let data_header = data.split('\n')[0].split('~');
+
+              let data_body = data.split('\n').slice(1)
+              //let data_body = data.split('\n').slice(1, 50)
+
+              data_body.map((value, index, array) => {
+              	let body_line = value.split('~')
+                let eachObj = {}
+                  
+                body_line.map((value, index, array) => {
+                	//console.log(data_header[13])
+                	eachObj[data_header[index]] = value
+                	
+                });
+                json_array.push(eachObj)
+
+              })
+              //console.log(json_array[2])
+            })
+        }
+
+
+      searchBox.onkeyup = (e)=>{
+          let searchField = e.target.value
+          
+          if(searchField === ''){
+              tblBody.innerHTML = '';
+              return;
+            }else if(searchField.length>2){            
+                let regex = new RegExp(searchField, "i");
+                tblBody.innerHTML = json_array.map(row => {
+                    if ((row.Ingredient.search(regex) != -1) || (row.Appl_No.search(regex) != -1)) {
+                    	
+                        return `<tr>
+                                    <td>${row['Ingredient']}</td><td>${row['DF;Route']}</td>
+                                    <td>${row['Trade_Name']}</td><td>${row['Applicant']}</td>
+                                    <td>${row['Strength']}</td><td>${row['Appl_Type']}</td>
+                                    <td>${row['Appl_No']}</td><td>${row['Product_No']}</td>
+                                    <td>${row['TE_Code']}</td><td>${row['Approval_Date']}</td>
+                                    <td>${row['RLD']}</td><td>${row['RS']}</td><td>${row['Type']}</td>
+                                    <td>${row['Applicant_Full_Name']}</td>
+                                    <td class="text-center"><a class="btn btn-success btn-sm text-white" target="_blank"
+                                        href="${urlParms(row)}">Get</a>
+                                    </td>
+                                </tr>`
+                    }
+                }).join("");
+                //setTimeout(() => $(myTable).DataTable(), 1000);
+                $(myTable).DataTable()
+                //$.fn.dataTable.ext.classes.sPageButton = 'dataTbl-style';
+            }
+        }
+        
+        let urlParms = (parms) => {
+            let url = new URL(`${window.location.href}product_details.html`);
+            url.searchParams.set('Product_No', parms['Product_No']);
+            url.searchParams.set('Appl_No', parms['Appl_No']);
+            url.searchParams.set('Appl_type', parms['Appl_Type']);
+            return url;
+        }
+
+        window.onload = function () {
+            loadData();
+        }
+        
+        // Live Search
+        //https://www.js-tutorials.com/jquery-tutorials/live-search-json-objects-data-using-jquery/
+      </script>
+  </body>
+</html>
