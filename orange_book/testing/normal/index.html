@@ -1,0 +1,130 @@
+
+{% extends 'base.html' %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+    <div class="">
+        <p class="">Search by Proprietary Name, Active Ingredient or Application Number.</p>
+        <form class="form-inline pb-1" onsubmit="searchData(event)">
+            <label class="sr-only" for="search">Name</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="search" placeholder="Type your search character" required>
+            <button type="submit" class="btn btn-primary mb-2 mr-4" id="btn-search">Search</button><br>
+            <a href="new_patents.html" target="_blank"><u>Newly Added Patents</u></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="delisted_patents.html"  target="_blank"><u>Delisted Patents</u></a>
+          </form>
+
+        <table id="myTable" class="gridtable" width="100%">
+            <thead class="table-primary">
+                <th>Ingredient</th>
+                <th>DF;Route</th>
+                <th>Trade_Name</th>
+                <th>Applicant</th>
+                <th>Strength</th>
+                <th>Appl_Type</th>
+                <th>Appl_No</th>
+                <th>Product_No</th>
+                <th>TE_Code</th>
+                <th>Approval_Date</th>
+                <th>RLD</th>
+                <th>RS</th>
+                <th>Type</th>
+                <th>Applicant_Full_Name</th>
+            </thead>
+            <tfoot>
+            <th>Ingredient</th>
+            <th>DF;Route</th>
+            <th>Trade_Name</th>
+            <th>Applicant</th>
+            <th>Strength</th>
+            <th>Appl_Type</th>
+            <th>Appl_No</th>
+            <th>Product_No</th>
+            <th>TE_Code</th>
+            <th>Approval_Date</th>
+            <th>RLD</th>
+            <th>RS</th>
+            <th>Type</th>
+            <th>Applicant_Full_Name</th>
+            </tfoot>
+            <tbody id="tbl-body"></tbody>
+        </table>
+        <hr>
+    </div>
+{% endblock %}
+
+
+{% block extraJs %}
+<script type="text/javascript">
+    const myTable = document.querySelector("#myTable");
+    const tblBody = document.querySelector("#tbl-body");
+
+    let searchData = (event) => {
+        event.preventDefault();
+        let searchField = event.target.search.value;
+        console.log(searchField)
+
+        if (searchField === "") {
+            tblBody.innerHTML = "";
+            return;
+        } else if (searchField.length > 3) {
+            
+            let url_parms = new URLSearchParams({
+                start: 1,
+                limit: 10,
+                q: searchField,
+            }).toString();
+
+            let url = `${window.location.href}api/products?${url_parms}`;
+
+            fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                //buildTbl(data.results)
+                buildTbl(data)
+                $(myTable).DataTable({
+                    /*
+                    "fnInitComplete": function(oSettings, json) {
+                        alert( 'DataTables has finished its initialisation.' );
+                    },
+                    */
+                    dom: 'Bfrtip', //Bfrtip', //lBfrtip
+                    buttons: ['pageLength','copy', 'csv']
+                });
+                
+            });
+            //.then((data) => console.log(data));
+        }
+    };
+    
+    let buildTbl = (data) => {
+        tblBody.innerHTML = data.map((row) => {
+            return `<tr>
+                        <td class="text-center"><a class="" target="_blank"
+                            href="${urlParms(row)}">${row["Ingredient"]}</a>
+                        </td>
+                        <td>${row["DF;Route"]}</td>
+                        <td>${row["Trade_Name"]}</td><td>${row["Applicant"]}</td>
+                        <td>${row["Strength"]}</td><td>${row["Appl_Type"]}</td>
+                        <td>${row["Appl_No"]}</td><td>${row["Product_No"]}</td>
+                        <td>${row["TE_Code"]}</td><td>${row["Approval_Date"]}</td>
+                        <td>${row["RLD"]}</td><td>${row["RS"]}</td>
+                        <td>${row["Type"]}</td>
+                        <td>${row["Applicant_Full_Name"]}</td>
+                    </tr>`;
+            }).join("");
+    }
+
+    let urlParms = (parms) => {
+        let url_parms = new URLSearchParams({
+            Product_No: parms["Product_No"],
+            Appl_No: parms["Appl_No"],
+            Appl_Type: parms["Appl_Type"],
+        }).toString();
+
+        let url = `${window.location.href}product_details.html?${url_parms}`;
+        return url;
+    };
+
+</script>
+{% endblock %}

@@ -1,0 +1,94 @@
+
+{% extends 'base.html' %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+    <div class="">
+        <p class="">Search by Proprietary Name, Active Ingredient or Application Number.</p>
+        <form class="form-inline pb-1" onsubmit="searchData(event)">
+            <label class="sr-only" for="search">Name</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="search" placeholder="Type your search character" required>
+            <button type="submit" class="btn btn-primary mb-2 mr-4" id="btn-search">Search</button><br>
+            <a href="new_patents.html" target="_blank"><u>Newly Added Patents</u></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="delisted_patents.html"  target="_blank"><u>Delisted Patents</u></a>
+          </form>
+
+        <table id="myTable" class="gridtable" width="100%">
+            <thead class="table-primary">
+                <tr>
+                    <th>Ingredient</th>
+                    <th>DF;Route</th>
+                    <th>Trade_Name</th>
+                    <th>Applicant</th>
+                    <th>Strength</th>
+                    <th>Appl_Type</th>
+                    <th>Appl_No</th>
+                    <th>Product_No</th>
+                    <th>TE_Code</th>
+                    <th>Approval_Date</th>
+                    <th>RLD</th>
+                    <th>RS</th>
+                    <th>Type</th>
+                    <th>Applicant_Full_Name</th>
+                </tr>
+            </thead>
+        </table>
+        <hr>
+    </div>
+{% endblock %}
+
+
+{% block extraJs %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $(function () {
+            reloadDatatables()
+        });
+
+        var reloadDatatables = ()=> {
+            let tables = $('#myTable').DataTable({
+                select: 'single',
+                destroy: true,
+                'bAutoWidth': false,
+                "pagingType": "full_numbers",
+                "ServerSide": true,
+                "ajax": (data, callback)=> {
+                    console.log(data.draw)
+                    let param = {};
+                    param.draw = data.draw;
+                    param.start = data.start;
+                    param.length = data.length;
+                    param.page = 1 //param.start / param.length + 1;
+ 
+                    let paramString = JSON.stringify(param);
+                    console.log('paramString: ' + paramString);
+                    //let url = `http://localhost:5000/api/products?q=bude`;
+                    let url = `http://localhost:5000/api/products`;
+                
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: paramString,
+                        dataType: 'json',
+                        success: (res)=> {
+                            //console.log(res)
+                            let returnData = {};
+                            returnData.draw = res.draw;
+                            returnData.recordsTotal = res.recordsTotal;
+                            returnData.recordsFiltered = res.recordsFiltered;
+                            returnData.data = res.data;
+                            callback(returnData);
+                            
+                        },
+                        error: ()=> {
+                            alert ( 'error');
+                        }
+                    })
+                }
+            });
+        };
+    });
+</script>
+{% endblock %}

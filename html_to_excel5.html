@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+
+    <div class="container" style="margin-top: 3%">
+      <div class="jumbotron p-4">
+        <h1 class="display-5">Export HTML Tables to Excel</h1>
+        <p class="lead">we can simply export html tables to excel.</p>
+        <hr class="my-3">
+        <p>Please enter a valid web address.</p>
+        <p class="lead">
+          <form onsubmit="fetchData(event)">
+            <input type="url" class="form-control" id="urlInput" placeholder="Please enter url" required><br>
+            
+            <p><b><u>Examples :</u></b><br>
+            	https://my.gstzen.in/m/state-codes/<br>
+            	https://finkode.com/ap/hyderabad.html<br>
+            	https://www.accessdata.fda.gov/scripts/cder/ob/search_patent.cfm?listed=delisted<br>
+            	https://www.accessdata.fda.gov/scripts/cder/ob/patent_info.cfm?Product_No=001&Appl_No=021995&Appl_type=N
+            </p>
+
+            <button class="btn btn-primary" onclick="exportExcel()">Click to Export</button>&nbsp;
+            <button class="btn btn-primary" onclick="emptyContent()">Empty Content</button>
+            <button type="submit" class="btn btn-primary float-right">Load Data</button>
+          </form>
+        </p>
+      </div>
+      <div id="loadData"></div>
+    </div>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    		crossorigin="anonymous">
+    </script>
+  
+	<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"
+			integrity="sha256-/VfFIAF4GLBN7iah7RFGi+zISoczKczfQTP4Dh4N0uw="
+			crossorigin="anonymous">
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/js-xlsx/xlsx.core.min.js"
+			integrity="sha256-7rU/A3/LDH6MKKcrRRbN/GQquNWg2HHaKSVtpuu0GcI="
+			crossorigin="anonymous">
+	</script>
+
+    <script type="application/javascript">
+    	// https://www.npmjs.com/package/tableexport.jquery.plugin
+    	//https://www.npmjs.com/package/tableexport.jquery.plugin
+    	//https://www.jsdelivr.com/package/npm/tableexport.jquery.plugin?path=libs%2Fjs-xlsx
+
+    	let fetchData = (event) => {
+    		event.preventDefault()
+      		let inputUrl = event.target.urlInput.value
+      		let url =  `https://api.allorigins.win/get?url=${encodeURIComponent(inputUrl)}`
+      
+      		fetch(url)
+      		.then(response => response.json())
+        	.then(data => {
+        		let res_obj = data.contents;          
+            	let allTables = $(res_obj).find("table")
+
+            	$("#loadData").html(allTables).addClass("table table-bordered table-striped").find("thead").addClass("table-primary");
+            	$("table").after("<br />");
+            	$('table a').contents().unwrap();
+          		//TableToExcel.convert(table);
+        	});
+    	}
+
+    	//let exportExcel = () => tableToExcel('studtable', 'Students') //$("table").tblToExcel();
+
+    	let exportExcel = () => {
+    		//($('#loadData').html()
+    		//$("table").tableExport();
+    		$('table').tableExport({type:'xlsx'});
+    	}
+    	
+
+    	let emptyContent = () => {
+    		$("#loadData").empty();
+        	$("form").trigger("reset");
+    	}
+
+	</script>
+  </body>
+</html>
