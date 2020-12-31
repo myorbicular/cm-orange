@@ -1,0 +1,42 @@
+
+{% extends 'base.html' %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+  <p class="text-capitalize">Patent information</p>
+  <table id="patent" class="gridtable" width="100%">
+    <thead class="table-primary">
+      <tr>
+        <th>appl_type</th>
+        <th>appl_no</th>
+        <th>product_no</th>
+        <th>patent_no</th>
+        <th>patent_expire_date_text</th>
+        <th>drug_substance_flag</th>
+        <th>drug_product_flag</th>
+        <th>patent_use_code</th>
+        <th>delist_flag</th>
+        <th>submission_date</th>
+      </tr>
+    </thead>
+  </table>
+  <br><hr>
+  <p class="text-capitalize">exclusivity information</p>
+  <table id="exclusivity" class="gridtable" width="100%">
+    <thead class="table-primary">
+      <tr>
+        <th>appl_type</th>
+        <th>appl_no</th>
+        <th>product_no</th>
+        <th>exclusivity_code</th>
+        <th>exclusivity_date</th>
+      </tr>
+    </thead>
+  </table>
+
+{% endblock %}
+
+{% block extraJs %}
+<script type="text/javascript" src="{{ url_for('static', filename= 'js/product_details.js') }}"></script>
+{% endblock %}
